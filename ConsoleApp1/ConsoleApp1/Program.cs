@@ -32,22 +32,38 @@ namespace ConsoleApp1
                     int index = r.Next(0, allOwners.Count);
                     var owner = allOwners[index];
 
-                    foreach (var p in owner.OwnersPets)
+                    //foreach (var p in owner.OwnersPets)
+                    //{
+                    //    if (p.IsOnTheWalk)
+                    //    {
+                    //        p.IsOnTheWalk = false;
+
+                    //        if (!petsOnTheWalk.Remove(p.PetName))
+                    //        {
+                    //            throw new Exception("Try to remove pet that isn't on a walk");
+                    //        }
+                    //        break;
+                    //    }
+                    //}
+
+                    //LINQ
+                    var ownerPetsOnTheWalk = from p in owner.OwnersPets
+                                             where p.IsOnTheWalk
+                                             select p;
+
+                    if (ownerPetsOnTheWalk.Any())
                     {
-                        if (p.IsOnTheWalk)
+                        var petFirst = ownerPetsOnTheWalk.First();
+                        petFirst.IsOnTheWalk = false;
+                        if (!petsOnTheWalk.Remove(petFirst.PetName))
                         {
-                            p.IsOnTheWalk = false;
-                            
-                            if (!petsOnTheWalk.Remove(p.PetName))
-                            {
-                                throw new Exception("Try to remove pet that isn't on a walk");
-                            }
-                            break;
+                            throw new Exception("Try to remove pet that isn't on a walk");
                         }
                     }
-                }
-                Console.WriteLine("All pets are at home");
-            } 
+                }   
+                Console.WriteLine("All pets are at home"); 
+            }
+             
             catch (Exception e) 
             {
                 throw new Exception(e.Message);
@@ -60,6 +76,7 @@ namespace ConsoleApp1
             {
                 walkingPets.Add(pet.PetName);
                 pet.IsOnTheWalk = true;
+
             }
         }
 
